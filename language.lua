@@ -12,6 +12,8 @@ local protectedMode = true
 local systemLanguage = "english"
 local automaticUpdate = true
 local isolatedMode = true
+local sanitizeOutput = true
+local sanitizeFilter = {"string", "table", "number"}
 
 local function getData(path)
 	local nest = {}

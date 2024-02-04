@@ -90,5 +90,34 @@ A pure lua library for management of strings
 			- \**String* `data` Path to the file to look for loading the table.
 			- \**Table* `data` Table containing the strings already loaded.
 	- Returns:
-		- `nil`
-		
+		- nothing
+
+- `language.setLanguage(name)` Sets the current language to use
+	- Parameters:
+		- \**String* `name` The current language chosen.
+	- Returns:
+		- nothing
+
+- `language.setProtectedMode(bool)` ***Enabled*** by default, Make protected calls for catching runtime errors.
+	- Parameters:
+		- \**Boolean* `bool` Enable *true*, Disable *false*.
+	- Returns:
+		- nothing
+
+- `language.setIsoleatedMode(bool)` ***Enabled*** by default, when loading a string from an external lua file isolate said lua file for accessing the environment, can be disabled to do wacky stuff for dynamic and or procedural string generation.
+	- Parameters:
+		- \**Boolean* `bool` Enable *true*, Disable *false*.
+	- Returns:
+		- nothing
+
+- `language.setPrintErrors(bool)` ***Enabled*** by default, When in protected mode, print error that are being caught.
+	- Parameters:
+		- \**Boolean* `bool` Enable *true*, Disable *false*.
+	- Returns:
+		- nothing
+
+- `language.getString(key)`
+	- Parameters:
+		- \**String* `key` String identification key, the key can be nested in other keys using the `.` separator eg: `menu.main.title`
+	- Returns:
+		- \**String* `string` when used correctly this will always return a *String*, it may return a table when the `key` points to said table, but also may point to a function or undefined types if `setSanitizeOutput` is set to `false`.
