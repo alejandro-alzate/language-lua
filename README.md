@@ -44,6 +44,7 @@ A pure lua library for management of strings
 
 	language.loadLanguage("english", english)
 	language.loadLanguage("spanish", spanish)
+	language.setLanguage("english")
 	language.setBackupLanguage("english")
 	```
 	- Method 2: The string are on an external file
@@ -79,7 +80,15 @@ A pure lua library for management of strings
 	-->Iniciar
 	-->Descripcion de iniciar
 	```
-6. 💎 Profit. For more in depth documentation take a look down below.
+6. 💎 Profit. For more in depth documentation take a look down [below](#api-documentation).
 
-## API
+## API Documentation
 - `language.loadLanguage(name, data)` Load a table containing the strings into memory.
+	- Parameters:
+		- \**String* `name` What name will have the key where the data will be saved.
+		- \**String, Table* `data`
+			- \**String* `data` Path to the file to look for loading the table.
+			- \**Table* `data` Table containing the strings already loaded.
+	- Returns:
+		- `nil`
+		
