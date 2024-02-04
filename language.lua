@@ -56,7 +56,13 @@ end
 
 local function loadLanguage(name, data)
 	if type(data) == "string" then
-		localization[name] = require(data)
+		local result = require(data)
+		if type(result) == "table" then
+			localization[name] = result
+		elseif printErrors then
+			local msg = "Cannot load %s The lua file %s didn't return a table returned %s"
+			print(string.format(msg, tostring(name), tostring(data), tostring(result)))
+		end
 	elseif type(data) == "table" then
 		localization[name] = data
 	elseif printErrors then
@@ -72,6 +78,22 @@ local function setBackupLanguage(name)
 	elseif printErrors then
 		local msg = "Cannot set backup language %s,\nneeds to be loaded first by using language.loadLanguage(name, data)"
 		print(string.format(msg, name))
+	end
+end
+
+function lang.setProtectedMode(bool)
+	if bool then
+		protectedMode = true
+	else
+		protectedMode = false
+	end
+end
+
+function lang.setPrintErros(bool)
+	if bool then
+		printErrors = true
+	else
+		printErrors = false
 	end
 end
 
