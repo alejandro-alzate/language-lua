@@ -69,6 +69,9 @@ local function loadLanguage(name, data)
 		local msg = "Cannot load language %s due to the data is an %s type"
 		print(string.format(msg, tostring(name), type(data)))
 	end
+	if #localization <= 1 then
+		backupLang = localization[1]
+	end
 end
 
 local function setBackupLanguage(name)
