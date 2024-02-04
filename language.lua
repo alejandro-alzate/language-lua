@@ -11,6 +11,7 @@ local printErrors = true
 local protectedMode = true
 local systemLanguage = "english"
 local automaticUpdate = true
+local isolatedMode = true
 
 local function getData(path)
 	local nest = {}
@@ -56,7 +57,12 @@ end
 
 local function loadLanguage(name, data)
 	if type(data) == "string" then
-		local result = require(data)
+		local result
+		if isolatedMode then
+			result = setfenv(require(data), {})
+		else
+			result = require(data)
+		end
 		if type(result) == "table" then
 			localization[name] = result
 		elseif printErrors then
@@ -69,8 +75,14 @@ local function loadLanguage(name, data)
 		local msg = "Cannot load language %s due to the data is an %s type"
 		print(string.format(msg, tostring(name), type(data)))
 	end
-	if #localization <= 1 then
-		backupLang = localization[1]
+	if #localization == 1 then
+		local firstKey = ""
+		for k, v in pairs(localization) do
+			firstKey = k
+			break
+		end
+		backupLang = k
+		actualLang = k
 	end
 end
 
@@ -84,11 +96,32 @@ local function setBackupLanguage(name)
 	end
 end
 
+function lang.loadLanguage(name, data)
+	if protectedMode then
+		local success, msg = pcall(loadLanguage, name, data)
+		if success then
+			return msg
+		elseif printErrors then
+			print(msg)
+		end
+	else
+		return loadLanguage(name, data)
+	end
+end
+
 function lang.setProtectedMode(bool)
 	if bool then
 		protectedMode = true
 	else
 		protectedMode = false
+	end
+end
+
+function lang.setIsolatedMode(bool)
+	if bool then
+		isolatedMode = true
+	else
+		isolatedMode = false
 	end
 end
 
@@ -137,19 +170,6 @@ function lang.setLanguage(languageName)
 	end
 	if automaticUpdate then
 		lang.update()
-	end
-end
-
-function lang.loadLanguage(name, data)
-	if protectedMode then
-		local success, msg = pcall(loadLanguage, name, data)
-		if success then
-			return msg
-		elseif printErrors then
-			print(msg)
-		end
-	else
-		return loadLanguage(name, data)
 	end
 end
 
