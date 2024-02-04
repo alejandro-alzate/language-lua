@@ -134,9 +134,10 @@ A pure lua library for management of strings
 	- Returns:
 		- nothing
 
-- `language.getString(key)`
+- `language.getString(stringKey, languageKey)`
 	- Parameters:
-		- \**String* `key` String identification key, the key can be nested in other keys using the `.` separator eg: `menu.main.title`
+		- \**String* `stringKey` String identification key, the key can be nested in other keys using the `.` separator eg: `menu.main.title`
+		- *String* `languageKey` when set this will override the current language **only** for this call to the specified one, if not found it will just ignore it.
 	- Returns:
 		- \**String* `string` when used correctly this will always return a *String*, it may return a table when the `key` points to said table, but also may point to a function or undefined types if `setSanitizeOutput` is set to `false`.
 

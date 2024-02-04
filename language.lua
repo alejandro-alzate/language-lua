@@ -15,9 +15,9 @@ local isolatedMode = true
 local sanitizeOutput = true
 local sanitizeFilter = {"string", "table", "number"}
 
-local function getData(path)
+local function getData(path, lastTable)
 	local nest = {}
-	local lastTable = actualLang
+	local lastTable = lastTable or actualLang
 	local value
 	if path then
 		for word in path:gmatch("[^.]+") do
@@ -53,8 +53,8 @@ local function getBackupData(path)
 	end
 end
 
-local function getString(stringPath)
-	local data = getData(stringPath) or getBackupData(stringPath) or tostring(stringPath) .." is not defined."
+local function getString(stringKey, languageKey)
+	local data = getData(stringKey, localization[languageKey]) or getBackupData(stringKey) or tostring(stringKey) .." is not defined."
 	if sanitizeOutput then
 		for k,v in pairs(sanitizeFilter) do
 			if type(data) == v then
@@ -62,7 +62,7 @@ local function getString(stringPath)
 			end
 		end
 		local msg = "Blocked %s since the type %s is not on the whitelist"
-		return string.format(msg, tostring(stringPath), type(data))
+		return string.format(msg, tostring(stringKey), type(data))
 	else
 		return data
 	end
@@ -172,16 +172,16 @@ function lang.setPrintErros(bool)
 	end
 end
 
-function lang.getString(stringPath)
+function lang.getString(stringKey, languageKey)
 	if protectedMode then
-		local success, msg = pcall(getString, stringPath)
+		local success, msg = pcall(getString, stringKey, languageKey)
 		if success then
 			return msg
 		elseif printErrors then
 			print(msg)
 		end
 	else
-		return getString(stringPath)
+		return getString(stringKey, languageKey)
 	end
 	return ""
 end
