@@ -83,20 +83,8 @@ A pure lua library for management of strings
 6. 💎 Profit. For more in depth documentation take a look down [below](#api-documentation).
 
 ## API Documentation
-- `language.loadLanguage(name, data)` Load a table containing the strings into memory.
-	- Parameters:
-		- \**String* `name` What name will have the key where the data will be saved.
-		- \**String, Table* `data`
-			- \**String* `data` Path to the file to look for loading the table.
-			- \**Table* `data` Table containing the strings already loaded.
-	- Returns:
-		- nothing
 
-- `language.setLanguage(name)` Sets the current language to use
-	- Parameters:
-		- \**String* `name` The current language chosen.
-	- Returns:
-		- nothing
+#### Safeguards
 
 - `language.setProtectedMode(bool)` ***Enabled*** by default, Make protected calls for catching runtime errors.
 	- Parameters:
@@ -110,9 +98,39 @@ A pure lua library for management of strings
 	- Returns:
 		- nothing
 
+- `language.setSanitizeOutput(bool)` ***Enabled*** by default, when calling getString filter out any type that is not in the `sanitizeFilter` whitelist.
+	- Parameters:
+		- \**Boolean* `bool` Enable *true*, Disable *false*.
+	- Returns:
+		- nothing
+
+- `language.setSanitizeOutputFilters(filterList)` Set what types `getString` is allowed to output when `setSanitizeOutput` is enabled, by default they are `string`, `number` and `table`
+	- Parameters:
+		- *Table* `filterList` A table containing strings that represent a type like `string`, `function`, `number`, `nil`, `table` or `userdata` when given the literall `nil` it will assume default config wich is `{"string", "table", "number"}`.
+	- Returns:
+		- nothing
+
+#### Library settings
+
+- `language.setLanguage(name)` Sets the current language to use
+	- Parameters:
+		- \**String* `name` The current language chosen.
+	- Returns:
+		- nothing
+
 - `language.setPrintErrors(bool)` ***Enabled*** by default, When in protected mode, print error that are being caught.
 	- Parameters:
 		- \**Boolean* `bool` Enable *true*, Disable *false*.
+	- Returns:
+		- nothing
+
+#### Resource Manipulation
+- `language.loadLanguage(name, data)` Load a table containing the strings into memory.
+	- Parameters:
+		- \**String* `name` What name will have the key where the data will be saved.
+		- \**String, Table* `data`
+			- \**String* `data` Path to the file to look for loading the table.
+			- \**Table* `data` Table containing the strings already loaded.
 	- Returns:
 		- nothing
 
@@ -121,3 +139,31 @@ A pure lua library for management of strings
 		- \**String* `key` String identification key, the key can be nested in other keys using the `.` separator eg: `menu.main.title`
 	- Returns:
 		- \**String* `string` when used correctly this will always return a *String*, it may return a table when the `key` points to said table, but also may point to a function or undefined types if `setSanitizeOutput` is set to `false`.
+
+
+
+- `lang.getLocalizationData()`
+	- Parameters:
+		- nothing
+	- Returns:
+		- \**Table* `localization` This contains the strings loaded, although not encouraged this can be manipulated directly.
+
+- `lang.getActualLanguageData()`
+	- Parameters:
+		- nothing
+	- Returns:
+		- \**Table* `actualLang` Returns what is effectively `localization[systemLanguage]`.
+
+- `lang.getBackupLanguageData()`
+	- Parameters:
+		- nothing
+	- Returns:
+		- \**Table* `backupLang` This is a fallback table where a `key` will be searched when `actualLang` has no defined such `key`.
+	return backupLang
+end
+
+- `lang.getCurrentLanguage()` Get the current language that this library tries to look for when asked of a key on `getString`.
+	- Parameters:
+		- nothing
+	- Returns:
+		- \**String* `systemLanguage` What is the language that is set.

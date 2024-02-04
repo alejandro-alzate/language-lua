@@ -54,7 +54,18 @@ local function getBackupData(path)
 end
 
 local function getString(stringPath)
-	return getData(stringPath) or getBackupData(stringPath) or tostring(stringPath) .." is not defined."
+	local data = getData(stringPath) or getBackupData(stringPath) or tostring(stringPath) .." is not defined."
+	if sanitizeOutput then
+		for k,v in pairs(sanitizeFilter) do
+			if type(data) == v then
+				return data
+			end
+		end
+		local msg = "Blocked %s since the type %s is not on the whitelist"
+		return string.format(msg, tostring(stringPath), type(data))
+	else
+		return data
+	end
 end
 
 local function loadLanguage(name, data)
@@ -108,6 +119,32 @@ function lang.loadLanguage(name, data)
 		end
 	else
 		return loadLanguage(name, data)
+	end
+end
+
+function lang.setSanitizeOutput(bool)
+	if bool then
+		sanitizeOutput = true
+	else
+		sanitizeOutput = false
+	end
+end
+
+function lang.setSanitizeOutputFilters(filters)
+	if type(filters) == "table" then
+		for k,v in pairs(filters) do
+			if type(v) == "string" then
+			else
+				if printErrors then
+					local msg = "Found anomalous types on the filter list only strings are allowed, found: %s"
+					print(string.format(msg, type(v)))
+				end
+				return
+			end
+		end
+		sanitizeFilter = filters
+	elseif filters == nil then
+		sanitizeFilter = {"string", "table", "number"}
 	end
 end
 
