@@ -1,5 +1,5 @@
 # *language.lua*
-A pure lua library for management of strings
+A pure lua library for management of strings geared towards localization purposes.
 
 ## Features
 - Hot swap in real time of strings
@@ -163,7 +163,7 @@ A pure lua library for management of strings
 	return backupLang
 end
 
-- `lang.getCurrentLanguage()` Get the current language that this library tries to look for when asked of a key on `getString`.
+- `lang.getLanguage()` Get the current language that this library tries to look for when asked of a key on `getString`.
 	- Parameters:
 		- nothing
 	- Returns:

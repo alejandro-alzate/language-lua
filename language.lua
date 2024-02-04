@@ -212,6 +212,10 @@ function lang.setLanguage(languageName)
 	end
 end
 
+function lang.getLanguage()
+	return systemLanguage
+end
+
 function lang.setBackupLanguage(name)
 	if protectedMode then
 		local success, msg = pcall(setBackupLanguage, name, data)
@@ -235,10 +239,6 @@ end
 
 function lang.getBackupLanguageData()
 	return backupLang
-end
-
-function lang.getCurrentLanguage()
-	return systemLanguage
 end
 
 return lang
